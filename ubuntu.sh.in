@@ -1,0 +1,4 @@
+make distclean
+sh configure --prefix=/usr
+make -j8
+sudo checkinstall --pkgname=real --pkgversion @PACKAGE_VERSION@ --backup=no --default --deldoc

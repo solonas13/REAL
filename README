@@ -1,0 +1,4 @@
+To compile REAL, please follow the instructions given in INSTALL. 
+
+After compilation the binary real will be in the src directory, i.e. 
+you can call it from this directory via src/real .
