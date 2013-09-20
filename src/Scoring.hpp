@@ -36,7 +36,7 @@ struct Scoring
       static const double DFLT_ERR;           /* default sequencing error rate per base [0-1) - Error-free = 0 */
       static const double DFLT_TRANS;         /* default transitions fraction of mutations (0-1) - Unbiased = 4/12 */
       static const double DFLT_GC;            /* default composition bias (0-1) - Unbiased = 0.5 */
-      static const double DFLT_GCMUT_BIAS;       /* default mutability bias of G&C over A&T (>0) - Unbiased = GC/(1-GC)*/
+      static const double DFLT_GCMUT_BIAS;       /* default mutability bias of G&C over A&T (>0) - Unbiased = 1*/
       /* Scoring parameters END */
 
       private:

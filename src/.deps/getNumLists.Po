@@ -1,3 +1,0 @@
-getNumLists.o: getNumLists.cpp getNumLists.hpp
-
-getNumLists.hpp:
