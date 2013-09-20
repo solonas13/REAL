@@ -69,25 +69,28 @@ void Scoring::init(double similarity, double gcContent, double transitRate, doub
    this->bgFreq[1] = gcContent / 2;         /* background frequencies of G and C */
    this->bgFreq[2] = gcContent / 2;
    
-   /* Transitions target frequencies */
-   this->oddsRatio[0][2] = transit / 2 / (gcMutBias + 1);
-   this->oddsRatio[3][1] = transit / 2 / (gcMutBias + 1);
-   this->oddsRatio[2][0] = transit / 2 / (gcMutBias + 1) * gcMutBias;
-   this->oddsRatio[1][3] = transit / 2 / (gcMutBias + 1) * gcMutBias;
-   /* Transversions target frequencies */
-   this->oddsRatio[0][1] = transver / 4 / (gcMutBias + 1);
-   this->oddsRatio[3][2] = transver / 4 / (gcMutBias + 1);
-   this->oddsRatio[3][0] = transver / 4 / (gcMutBias + 1);
-   this->oddsRatio[0][3] = transver / 4 / (gcMutBias + 1);
-   this->oddsRatio[1][0] = transver / 4 / (gcMutBias + 1) * gcMutBias;
-   this->oddsRatio[2][3] = transver / 4 / (gcMutBias + 1) * gcMutBias;
-   this->oddsRatio[1][2] = transver / 4 / (gcMutBias + 1) * gcMutBias;
-   this->oddsRatio[2][1] = transver / 4 / (gcMutBias + 1) * gcMutBias;
-   /* Conservations target frequencies */
-   this->oddsRatio[0][0] = this->bgFreq[0] - (1 - similarity) / 2 / (gcMutBias + 1);
-   this->oddsRatio[3][3] = this->bgFreq[3] - (1 - similarity) / 2 / (gcMutBias + 1);
-   this->oddsRatio[2][2] = this->bgFreq[2] - (1 - similarity) / 2 / (gcMutBias + 1) * gcMutBias;
-   this->oddsRatio[1][1] = this->bgFreq[1] - (1 - similarity) / 2 / (gcMutBias + 1) * gcMutBias;
+   /* Adjust gcMutBias taking the gcContent into account */
+   gcMutBias = gcMutBias * (1-gcContent) / gcContent;
+
+   /* Transition probabilities */
+   /*AG*/ this->oddsRatio[0][2] = transit / (gcMutBias + 1) / (1-gcContent);
+   /*TC*/ this->oddsRatio[3][1] = transit / (gcMutBias + 1) / (1-gcContent);
+   /*GA*/ this->oddsRatio[2][0] = transit / (gcMutBias + 1) / gcContent * gcMutBias;
+   /*CT*/ this->oddsRatio[1][3] = transit / (gcMutBias + 1) / gcContent * gcMutBias;
+   /* Transversion probabilities */
+   /*AC*/ this->oddsRatio[0][1] = transver / 2 / (gcMutBias + 1) / (1-gcContent);
+   /*TG*/ this->oddsRatio[3][2] = transver / 2 / (gcMutBias + 1) / (1-gcContent);
+   /*AT*/ this->oddsRatio[0][3] = transver / 2 / (gcMutBias + 1) / (1-gcContent);
+   /*TA*/ this->oddsRatio[3][0] = transver / 2 / (gcMutBias + 1) / (1-gcContent);
+   /*CA*/ this->oddsRatio[1][0] = transver / 2 / (gcMutBias + 1) / gcContent * gcMutBias;
+   /*GT*/ this->oddsRatio[2][3] = transver / 2 / (gcMutBias + 1) / gcContent * gcMutBias;
+   /*CG*/ this->oddsRatio[1][2] = transver / 2 / (gcMutBias + 1) / gcContent * gcMutBias;
+   /*GC*/ this->oddsRatio[2][1] = transver / 2 / (gcMutBias + 1) / gcContent * gcMutBias;
+   /* Conservation probabilities */
+   /*AA*/ this->oddsRatio[0][0] = 1 - this->oddsRatio[0][1] - this->oddsRatio[0][2] - this->oddsRatio[0][3];
+   /*TT*/ this->oddsRatio[3][3] = 1 - this->oddsRatio[3][0] - this->oddsRatio[3][1] - this->oddsRatio[3][2];
+   /*GG*/ this->oddsRatio[2][2] = 1 - this->oddsRatio[2][0] - this->oddsRatio[2][1] - this->oddsRatio[2][3];
+   /*CC*/ this->oddsRatio[1][1] = 1 - this->oddsRatio[1][0] - this->oddsRatio[1][2] - this->oddsRatio[1][3];
       
    /* Odds Ratios */
    for (int x=0; x<4; x++)
@@ -100,7 +103,7 @@ void Scoring::init(double similarity, double gcContent, double transitRate, doub
 #endif
          psum += oddsRatio[x][y];
          
-         this->oddsRatio[x][y] /= this->bgFreq[x] * this->bgFreq[y];
+         this->oddsRatio[x][y] /= this->bgFreq[y];
       }
 #if defined(DEBUG_SCORES)
       std::cerr << std::endl;
@@ -151,19 +154,20 @@ double Scoring::getScore(char refBase, double aPrb, double cPrb, double gPrb, do
  */
 double Scoring::getScore(char refBase, char readBase, int quality)
 {
-   double xyR = 0;
-   for (int y=0; y<4; y++)
-   {
-      double prb;
-      if ( readBase == y )             /* optimal base call, weighted by the confidence in the call */
-         prb = 1 - Q_PRB[quality] ;
-      else                             /* suboptimal base calls, 
-                                        * the call-error probability is equally distributed among the 3 suboptimal calls */
-         prb =  Q_PRB[quality] / 3;
+//    double xyR = 0;
+//    for (int y=0; y<4; y++)
+//    {
+//       double prb;
+//       if ( readBase == y )             /* optimal base call, weighted by the confidence in the call */
+//          prb = 1 - Q_PRB[quality] ;
+//       else                             /* suboptimal base calls, 
+//                                         * the call-error probability is equally distributed among the 3 suboptimal calls */
+//          prb =  Q_PRB[quality] / 3;
       
-      xyR += this->oddsRatio[static_cast<int>(refBase)][y] * prb;
-   }
-   return std::log(xyR)/std::log(2.0);
+//       xyR += this->oddsRatio[static_cast<int>(refBase)][y] * prb;
+//    }
+//    return std::log(xyR)/std::log(2.0);
+   return std::log( this->oddsRatio[static_cast<int>(refBase)][static_cast<int>(readBase)] )/std::log(2.0) * ( 1 - Q_PRB[quality] );
 }
 
 
@@ -201,5 +205,5 @@ const double Scoring::DFLT_SIMILARITY = 0.995;   /* default sequence similarity 
 const double Scoring::DFLT_ERR = 0.00;           /* default sequencing error rate per base [0-1) - Error-free = 0 */
 const double Scoring::DFLT_TRANS = 0.71;         /* default transitions fraction of mutations (0-1) - Unbiased = 4/12 */
 const double Scoring::DFLT_GC = 0.41;            /* default composition bias (0-1) - Unbiased = 0.5 */
-const double Scoring::DFLT_GCMUT_BIAS = 2;       /* default mutability bias of G&C over A&T (>0) - Unbiased = 1*/
+const double Scoring::DFLT_GCMUT_BIAS = 2;       /* default mutability bias of G&C over A&T (>0) - Unbiased = GC/(1-GC) */
 
