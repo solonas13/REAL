@@ -12,6 +12,8 @@
 
 #if defined(HAVE_AIO_H)
 #include <aio.h>
+#include <unistd.h>
+#include <fcntl.h>
 
 struct AsynchronousWriter
 {
