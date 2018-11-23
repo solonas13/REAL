@@ -1,4 +1,11 @@
-To compile REAL, please follow the instructions given in INSTALL. 
+To compile REAL, please follow the instructions given in INSTALL.
 
-After compilation the binary real will be in the src directory, i.e. 
+After compilation the binary real will be in the src directory, i.e.
 you can call it from this directory via src/real .
+
+
+## Usage
+Example command
+```bash
+real -p testdata/ggal_gut_1.fq -t testdata/ggal_1_48850000_49020000.Ggal71.500bpflank.fa -o aligned_reads
+```
