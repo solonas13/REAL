@@ -1019,17 +1019,23 @@ struct GappedFactorArraySet
 
 			float const epsilon = opts.getFilterValue(patl);
 
-			FA0->match<pattern_type,scores,UpdateUniqueInfo<scores> >(straight[0],straight[5], 0 /* seedoffset */, ocomp23, 2*(opts.seedl/4) /* seed rest offset */, RWB, false,pattern,fi,info,epsilon);
+			// FA0->match<pattern_type,scores,UpdateUniqueInfo<scores> >(straight[0],straight[5], 0 /* seedoffset */, ocomp23, 2*(opts.seedl/4) /* seed rest offset */, RWB, false,pattern,fi,info,epsilon);
+			FA0->match(straight[0],straight[5], 0 /* seedoffset */, ocomp23, 2*(opts.seedl/4) /* seed rest offset */, RWB, false,pattern,fi,info,epsilon);
 
                         bool const uni0s = (info.getState() == UniqueMatchInfoBase::Straight) && (info.getErrors() == 0);
                         
                         if ( (! uni0s) || scores )
                         {
-				FA0->match<pattern_type,scores,UpdateUniqueInfo<scores> >(straight[3],straight[2], opts.seedl/4 /* seedoffset */, ocomp03, 0 /* seed rest offset */, RWB, false,pattern,fi,info,epsilon);
-				FA0->match<pattern_type,scores,UpdateUniqueInfo<scores> >(straight[5],straight[0], 2*(opts.seedl/4) /* seedoffset */, ocomp23, 0 /* seed rest offset */, RWB, false,pattern,fi,info,epsilon);							
-				FA1->match<pattern_type,scores,UpdateUniqueInfo<scores> >(straight[1],straight[4], 0 /* seedoffset */, ocomp13, 1*(opts.seedl/4) /* seed rest offset */, RWB, false,pattern,fi,info,epsilon);
-				FA1->match<pattern_type,scores,UpdateUniqueInfo<scores> >(straight[4],straight[1], opts.seedl/4 /* seedoffset */, ocomp13, 0 /* seed rest offset */, RWB, false,pattern,fi,info,epsilon);
-				FA2->match<pattern_type,scores,UpdateUniqueInfo<scores> >(straight[2],straight[3], 0 /* seedoffset */, ocomp23, 1*(opts.seedl/4) /* seed rest offset */, RWB, false,pattern,fi,info,epsilon);
+				FA0->match(straight[3],straight[2], opts.seedl/4 /* seedoffset */, ocomp03, 0 /* seed rest offset */, RWB, false,pattern,fi,info,epsilon);
+				FA0->match(straight[5],straight[0], 2*(opts.seedl/4) /* seedoffset */, ocomp23, 0 /* seed rest offset */, RWB, false,pattern,fi,info,epsilon);							
+				FA1->match(straight[1],straight[4], 0 /* seedoffset */, ocomp13, 1*(opts.seedl/4) /* seed rest offset */, RWB, false,pattern,fi,info,epsilon);
+				FA1->match(straight[4],straight[1], opts.seedl/4 /* seedoffset */, ocomp13, 0 /* seed rest offset */, RWB, false,pattern,fi,info,epsilon);
+				FA2->match(straight[2],straight[3], 0 /* seedoffset */, ocomp23, 1*(opts.seedl/4) /* seed rest offset */, RWB, false,pattern,fi,info,epsilon);
+				// FA0->match<pattern_type,scores,UpdateUniqueInfo<scores> >(straight[3],straight[2], opts.seedl/4 /* seedoffset */, ocomp03, 0 /* seed rest offset */, RWB, false,pattern,fi,info,epsilon);
+				// FA0->match<pattern_type,scores,UpdateUniqueInfo<scores> >(straight[5],straight[0], 2*(opts.seedl/4) /* seedoffset */, ocomp23, 0 /* seed rest offset */, RWB, false,pattern,fi,info,epsilon);							
+				// FA1->match<pattern_type,scores,UpdateUniqueInfo<scores> >(straight[1],straight[4], 0 /* seedoffset */, ocomp13, 1*(opts.seedl/4) /* seed rest offset */, RWB, false,pattern,fi,info,epsilon);
+				// FA1->match<pattern_type,scores,UpdateUniqueInfo<scores> >(straight[4],straight[1], opts.seedl/4 /* seedoffset */, ocomp13, 0 /* seed rest offset */, RWB, false,pattern,fi,info,epsilon);
+				// FA2->match<pattern_type,scores,UpdateUniqueInfo<scores> >(straight[2],straight[3], 0 /* seedoffset */, ocomp23, 1*(opts.seedl/4) /* seed rest offset */, RWB, false,pattern,fi,info,epsilon);
 			}
 
 			// compute reverse transpose signature seed
@@ -1045,17 +1051,23 @@ struct GappedFactorArraySet
 			// fill reverse rest word array (pattern bits beyond seed)
 			RWB.setupReverse(pattern.mapped);
 
-			FA0->match<pattern_type,scores,UpdateUniqueInfo<scores> >(reverse[0],reverse[5], 0 /* seedoffset */, ocomp23, 2*(opts.seedl/4) /* seed rest offset */, RWB, true,pattern,fi,info,epsilon);
+			// FA0->match<pattern_type,scores,UpdateUniqueInfo<scores> >(reverse[0],reverse[5], 0 /* seedoffset */, ocomp23, 2*(opts.seedl/4) /* seed rest offset */, RWB, true,pattern,fi,info,epsilon);
+			FA0->match(reverse[0],reverse[5], 0 /* seedoffset */, ocomp23, 2*(opts.seedl/4) /* seed rest offset */, RWB, true,pattern,fi,info,epsilon);
 
                         bool const uni0r = (info.getState() == UniqueMatchInfoBase::Reverse) && (info.getErrors() == 0);
 
                         if ( (! uni0r) || scores )
                         {
-				FA0->match<pattern_type,scores,UpdateUniqueInfo<scores> >(reverse[3],reverse[2], opts.seedl/4 /* seedoffset */, ocomp03, 0 /* seed rest offset */, RWB, true,pattern,fi,info,epsilon);							
-				FA0->match<pattern_type,scores,UpdateUniqueInfo<scores> >(reverse[5],reverse[0], 2*(opts.seedl/4) /* seedoffset */, ocomp23, 0 /* seed rest offset */, RWB, true,pattern,fi,info,epsilon);							
-				FA1->match<pattern_type,scores,UpdateUniqueInfo<scores> >(reverse[1],reverse[4], 0 /* seedoffset */, ocomp13, 1*(opts.seedl/4) /* seed rest offset */, RWB, true,pattern,fi,info,epsilon);
-				FA1->match<pattern_type,scores,UpdateUniqueInfo<scores> >(reverse[4],reverse[1], opts.seedl/4 /* seedoffset */, ocomp13, 0 /* seed rest offset */, RWB, true,pattern,fi,info,epsilon);
-				FA2->match<pattern_type,scores,UpdateUniqueInfo<scores> >(reverse[2],reverse[3], 0 /* seedoffset */, ocomp23, 1*(opts.seedl/4) /* seed rest offset */, RWB, true,pattern,fi,info,epsilon);
+				FA0->match(reverse[3],reverse[2], opts.seedl/4 /* seedoffset */, ocomp03, 0 /* seed rest offset */, RWB, true,pattern,fi,info,epsilon);							
+				FA0->match(reverse[5],reverse[0], 2*(opts.seedl/4) /* seedoffset */, ocomp23, 0 /* seed rest offset */, RWB, true,pattern,fi,info,epsilon);							
+				FA1->match(reverse[1],reverse[4], 0 /* seedoffset */, ocomp13, 1*(opts.seedl/4) /* seed rest offset */, RWB, true,pattern,fi,info,epsilon);
+				FA1->match(reverse[4],reverse[1], opts.seedl/4 /* seedoffset */, ocomp13, 0 /* seed rest offset */, RWB, true,pattern,fi,info,epsilon);
+				FA2->match(reverse[2],reverse[3], 0 /* seedoffset */, ocomp23, 1*(opts.seedl/4) /* seed rest offset */, RWB, true,pattern,fi,info,epsilon);
+				// FA0->match<pattern_type,scores,UpdateUniqueInfo<scores> >(reverse[3],reverse[2], opts.seedl/4 /* seedoffset */, ocomp03, 0 /* seed rest offset */, RWB, true,pattern,fi,info,epsilon);							
+				// FA0->match<pattern_type,scores,UpdateUniqueInfo<scores> >(reverse[5],reverse[0], 2*(opts.seedl/4) /* seedoffset */, ocomp23, 0 /* seed rest offset */, RWB, true,pattern,fi,info,epsilon);							
+				// FA1->match<pattern_type,scores,UpdateUniqueInfo<scores> >(reverse[1],reverse[4], 0 /* seedoffset */, ocomp13, 1*(opts.seedl/4) /* seed rest offset */, RWB, true,pattern,fi,info,epsilon);
+				// FA1->match<pattern_type,scores,UpdateUniqueInfo<scores> >(reverse[4],reverse[1], opts.seedl/4 /* seedoffset */, ocomp13, 0 /* seed rest offset */, RWB, true,pattern,fi,info,epsilon);
+				// FA2->match<pattern_type,scores,UpdateUniqueInfo<scores> >(reverse[2],reverse[3], 0 /* seedoffset */, ocomp23, 1*(opts.seedl/4) /* seed rest offset */, RWB, true,pattern,fi,info,epsilon);
 			}
 
 			handled++;
